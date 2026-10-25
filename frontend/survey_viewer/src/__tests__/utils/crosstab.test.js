@@ -1,4 +1,4 @@
-import { buildTable, significance, toCsv, toTsv } from '../../utils/crosstab';
+import { buildTable, toCsv, toTsv } from '../../utils/crosstab';
 import { sortDemographicValues } from '../../utils/survey';
 
 const VOTE = {
@@ -18,31 +18,13 @@ const ATTITUDE = {
   ],
 };
 
-// significance
-// a column clearly above or below everyone else is flagged higher or lower
-test('significance flags a share well above the rest of the sample', () => {
-  expect(significance(80, 100, 120, 200)).toBe('higher');
-  expect(significance(40, 100, 120, 200)).toBe('lower');
-});
-
-// no test runs when the column or the rest of the sample has under 30 respondents, as the z-test isn't reliable then
-test('significance needs at least 30 on both sides', () => {
-  expect(significance(29, 29, 30, 100)).toBeNull();
-  expect(significance(80, 100, 100, 120)).toBeNull();
-});
-
-// a small difference between a column and the rest isn't flagged
-test('significance ignores differences within noise', () => {
-  expect(significance(52, 100, 100, 200)).toBeNull();
-});
-
 // buildTable
 // sorting by total keeps the api's most-common-first order, and the total column gets each answer's share
 test('buildTable keeps the api order when sorting by total', () => {
   const table = buildTable(VOTE, { sortByTotal: true });
   expect(table.columns).toEqual([{ label: 'Total', base: 6 }]);
   expect(table.rows.map((r) => r.label)).toEqual(['Labour', 'Conservative', 'SNP']);
-  expect(table.rows[0].cells[0]).toMatchObject({ count: 3, base: 6, share: 0.5, significance: null });
+  expect(table.rows[0].cells[0]).toMatchObject({ count: 3, base: 6, share: 0.5 });
 });
 
 // with sorting off, answers are listed alphabetically

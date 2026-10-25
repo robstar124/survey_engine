@@ -23,16 +23,6 @@ function gridStyleFor(columns) {
   };
 }
 
-function SignificanceMark({ significance }) {
-  if (significance === 'higher') {
-    return <span className="mark up" title="Significantly higher than the rest of the sample">▲</span>;
-  }
-  if (significance === 'lower') {
-    return <span className="mark down" title="Significantly lower than the rest of the sample">▼</span>;
-  }
-  return null;
-}
-
 function Cell({ cell, mode, isTotal, isNet }) {
   const hasValue = cell.share !== null;
   const className = classNames('cell', isTotal && 'total', isNet && 'net', isLowBase(cell.base) && 'low');
@@ -43,10 +33,7 @@ function Cell({ cell, mode, isTotal, isNet }) {
 
   return (
     <div role="cell" className={className}>
-      <div>
-        {mode === 'counts' ? formatNumber(cell.count) : formatPercent(cell.share)}
-        <SignificanceMark significance={cell.significance} />
-      </div>
+      <div>{mode === 'counts' ? formatNumber(cell.count) : formatPercent(cell.share)}</div>
       {mode === 'both' && <div className="cell-sub">n={formatNumber(cell.count)}</div>}
     </div>
   );

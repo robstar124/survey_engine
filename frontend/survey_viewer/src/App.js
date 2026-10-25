@@ -262,7 +262,6 @@ export default function App() {
               : <CrosstabTable table={table} title={question?.text ?? ''} columnTitle={columnTitle} mode={view.mode} />}
 
             <div className="legend">
-              <span><span className="mark up">▲</span> <span className="mark down">▼</span> Significantly higher / lower than the rest of the sample at 95% (two-proportion z-test; both groups n ≥ 30)</span>
               <span>* Low base, n &lt; 50: treat with caution</span>
               <span>Column percentages{table?.scale && '; nets add up the options they name'}</span>
             </div>

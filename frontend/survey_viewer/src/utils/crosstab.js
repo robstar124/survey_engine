@@ -2,24 +2,6 @@ import { findScale, groupLabel, sortAnswerValues, sortDemographicValues } from '
 
 // bases under this are flagged as low
 export const MIN_BASE = 50;
-// two-sided z for 95% confidence
-export const Z_CRITICAL = 1.96;
-// both sides of a significance test need at least this many respondents
-const MIN_SIG_BASE = 30;
-
-// compare a column's share against everyone outside that column with a two-proportion z-test
-export function significance(count, base, totalCount, totalBase) {
-  const restBase = totalBase - base;
-  if (base < MIN_SIG_BASE || restBase < MIN_SIG_BASE) return null;
-  const pooled = totalCount / totalBase;
-  const standardError = Math.sqrt(pooled * (1 - pooled) * (1 / base + 1 / restBase));
-  if (standardError === 0) return null;
-  const z = (count / base - (totalCount - count) / restBase) / standardError;
-  if (z > Z_CRITICAL) return 'higher';
-  if (z < -Z_CRITICAL) return 'lower';
-  return null;
-}
-
 function countsByValue(counts) {
   return Object.fromEntries(counts.map(({ value, count }) => [value, count]));
 }
@@ -61,12 +43,7 @@ export function buildTable(results, { sortByTotal = false } = {}) {
       net: row.net,
       cells: row.counts.map((count, i) => {
         const base = columns[i].base;
-        return {
-          count,
-          base,
-          share: base ? count / base : null,
-          significance: i === 0 ? null : significance(count, base, row.counts[0], columns[0].base),
-        };
+        return { count, base, share: base ? count / base : null };
       }),
     })),
   };

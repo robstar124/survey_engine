@@ -10,18 +10,18 @@ const TABLE = {
       label: 'Labour',
       net: false,
       cells: [
-        { count: 100, base: 200, share: 0.5, significance: null },
-        { count: 96, base: 160, share: 0.6, significance: 'higher' },
-        { count: 4, base: 40, share: 0.1, significance: 'lower' },
+        { count: 100, base: 200, share: 0.5 },
+        { count: 96, base: 160, share: 0.6 },
+        { count: 4, base: 40, share: 0.1 },
       ],
     },
     {
       label: 'Agree (net)',
       net: true,
       cells: [
-        { count: 0, base: 200, share: 0, significance: null },
-        { count: 0, base: 160, share: 0, significance: null },
-        { count: 0, base: 0, share: null, significance: null },
+        { count: 0, base: 200, share: 0 },
+        { count: 0, base: 160, share: 0 },
+        { count: 0, base: 0, share: null },
       ],
     },
   ],
@@ -58,19 +58,18 @@ test('flags low bases in the header and base row', () => {
   expect(cellsOf(table, 'Base (n)').map((c) => c.textContent)).toEqual(['200', '160', '40*']);
 });
 
-// percent mode rounds shares to whole percentages and puts ▲/▼ after significant cells, with a tooltip saying what they mean
-test('shows percentages with significance marks', () => {
+// percent mode rounds shares to whole percentages, and low base cells get the low style
+test('shows percentages', () => {
   const table = renderTable();
   const cells = cellsOf(table, 'Labour');
-  expect(cells.map((c) => c.textContent)).toEqual(['50%', '60%▲', '10%▼']);
-  expect(within(cells[1]).getByTitle('Significantly higher than the rest of the sample')).toBeInTheDocument();
+  expect(cells.map((c) => c.textContent)).toEqual(['50%', '60%', '10%']);
   expect(cells[2]).toHaveClass('low');
 });
 
-// counts mode shows raw counts while keeping the significance marks
+// counts mode shows raw counts
 test('shows counts in counts mode', () => {
   const table = renderTable({ mode: 'counts' });
-  expect(cellsOf(table, 'Labour').map((c) => c.textContent)).toEqual(['100', '96▲', '4▼']);
+  expect(cellsOf(table, 'Labour').map((c) => c.textContent)).toEqual(['100', '96', '4']);
 });
 
 // both mode puts the count under the percentage
