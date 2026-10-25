@@ -7,7 +7,11 @@ authors = [
     { name = "robstar124" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "fastapi[standard]>=0.162.0",
+    "pandas>=3.1.0",
+    "sqlalchemy>=2.1.6",
+]
 
 [project.scripts]
 backend = "backend:main"
@@ -18,5 +22,6 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
     "pytest>=9.1.1",
 ]
